@@ -20,9 +20,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public bool canRepairWall;
         float rebuildTimer = 0;
         public float RebuildTime;
+        CharacterController _char;
         // Start is called before the first frame update
         void Start()
         {
+            _char = GetComponent<CharacterController>();
             _uiManager = GameObject.Find("UI").GetComponent<UIManager>();
             if (_uiManager == null)
             {
@@ -38,6 +40,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Interact();
+            }
+            if(Input.GetButton("Crouch"))
+            {
+                _char.height = .8f;
+            }
+            else
+            {
+                _char.height = 1.8f;
             }
         }
         private void OnTriggerStay(Collider other)
@@ -79,12 +89,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
         void HoverInteract()
         {
             RaycastHit hoverHit;
-            _uiManager._doorText.text = ("");
             if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out hoverHit, _interactRange))
             {
                 if (hoverHit.transform.name == "Door")
                 {
                     _uiManager.UpdateDoor();
+                }
+                else
+                {
+                    _uiManager.RemoveText();
                 }
             }
         }

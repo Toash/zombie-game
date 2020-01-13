@@ -54,13 +54,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
         private void OnEnable()
         {
+            _gunName = transform.name;
             _isReloading = false;
         }
 
         // Update is called once per frame
         void Update()
         {
-            _gunName = transform.name;
             WeaponSway();
             if(Input.GetKeyDown(KeyCode.R))
             {
@@ -164,7 +164,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 RaycastHit hit;
                 if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit))
                 {
-                    Enemy enemy = hit.transform.GetComponent<Enemy>();
+                    Enemy enemy = hit.transform.GetComponentInParent<Enemy>();
                     //if hit ground
                     if (hit.transform.tag != "Enemy")
                     {

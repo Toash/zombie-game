@@ -6,43 +6,37 @@ namespace UnityStandardAssets.Characters.FirstPerson
 {
     public class UIManager : MonoBehaviour
     {
-        public Text _pointsText;
-        public Text _coeffText;
-        public Text _doorText;
-        public Text _gunText;
-        public Text _reloadText;
-        public Text _repairText;
-        public Text _roundText;
+        private Text _pointsText;
+        private Text _doorText;
+        private Text _gunText;
+        private Text _reloadText;
+        private Text _repairText;
+        private Text _roundText;
+        private Text _zombieCountText;
 
         private Player _player;
-        private Coeff _coeff;
         private Door _door;
         private GunScript _gun;
         private SpawnManager _spawnManager;
-        // Start is called before the first frame update
-        void Start()
-        {
-            _player = GameObject.Find("Player").GetComponent<Player>();
-            if (_player == null)
-            {
-                Debug.LogError("Error");
-            }
-            _coeff = GameObject.Find("Coeff").GetComponent<Coeff>();
-            if (_coeff == null)
-            {
-                Debug.LogError("Error");
-            }
-            _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-            if(_spawnManager == null)
-            {
-                Debug.LogError("Did not get spawn manager");
-            }
-        }
 
-        // Update is called once per frame
-        void Update()
+        //getting references
+        void Awake()
         {
-            UpdateCoeff();
+            _pointsText = GameObject.Find("PointsText").GetComponent<Text>();
+            _doorText = GameObject.Find("DoorText").GetComponent<Text>();
+            _gunText = GameObject.Find("GunText").GetComponent<Text>();
+            _reloadText = GameObject.Find("ReloadingText").GetComponent<Text>();
+            _repairText = GameObject.Find("RepairText").GetComponent<Text>();
+            _roundText = GameObject.Find("RoundText").GetComponent<Text>();
+            _zombieCountText = GameObject.Find("ZombieCount").GetComponent<Text>();
+            _player = GameObject.Find("Player").GetComponent<Player>();
+            _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+            _doorText.text = ("");
+        }
+        // Update is called once per frame
+        void LateUpdate()
+        {
+            UpdateRoundText();
             UpdateGunText();
             if(_gun._isReloading == true)
             {
@@ -70,13 +64,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             _pointsText.text = "Points: " + playerPoints.ToString();
         }
-        public void UpdateCoeff()
-        {
-            _coeffText.text = "SpawnRate Coeff: " + _coeff._coefficient.ToString();
-        }
         public void UpdateDoor()
         {
             _doorText.text = _door._costToOpen.ToString() + (" points to open door");
+        }
+        public void RemoveText()
+        {
+            _doorText.text = ("");
         }
         public void UpdateGunText()
         {
@@ -84,7 +78,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
         public void UpdateRoundText()
         {
-            _roundText.text = _spawnManager._round.ToString();
+            _roundText.text = "Round " + _spawnManager._round.ToString();
+        }
+        public void UpdateEnemyCount()
+        {
+            _zombieCountText.text = "Zombies: " + _spawnManager._enemyCount.ToString();
         }
     }
 }
